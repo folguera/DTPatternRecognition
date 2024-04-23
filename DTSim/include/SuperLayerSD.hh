@@ -55,6 +55,7 @@ class SuperLayerSD : public G4VSensitiveDetector
   private:
     G4int GetCellID(G4int copyNo) const;
     G4int GetLayerID(G4int copyNo) const;
+    G4double GetTimeWithDrift(G4double time, G4ThreeVector distance) const;
 
     SuperLayerHitsCollection* fHitsCollection = nullptr;
     G4int fHCID = -1;

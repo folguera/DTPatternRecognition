@@ -45,6 +45,8 @@ namespace DTSim
   constexpr G4double  kYokeThickness  = 29*cm;  // The other flavour is 63cm
 
   constexpr G4int kNofColumns = 6;
+
+  constexpr G4double kDriftVelocity = 54.0*micrometer/nanosecond;
 }
 
 #endif

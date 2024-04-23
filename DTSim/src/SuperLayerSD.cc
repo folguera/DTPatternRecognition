@@ -37,7 +37,7 @@
 #include "G4Step.hh"
 #include "G4SDManager.hh"
 #include "G4ios.hh"
-
+#include "G4ThreeVector.hh"
 namespace DTSim
 {
 
@@ -81,11 +81,18 @@ G4bool SuperLayerSD::ProcessHits(G4Step*step, G4TouchableHistory*)
   auto worldPos = preStepPoint->GetPosition();
   auto localPos = touchable->GetHistory()->GetTopTransform().TransformPoint(worldPos);
 
+  // Get position with respect of the center of the cell:
+  G4ThreeVector origin(0., 0., 0.);
+  auto detectorCenter = touchable->GetHistory()->GetTopTransform().Inverse().TransformPoint(origin);
+  auto hitOffset = worldPos - detectorCenter;
+  
+  auto timeDrift = GetTimeWithDrift(preStepPoint->GetGlobalTime(), hitOffset);
+
   auto hit = new SuperLayerHit(cellID, layerID);
   hit->SetLogV(physical->GetLogicalVolume());
   hit->SetWorldPos(worldPos);
   hit->SetLocalPos(localPos);
-  hit->SetTime(preStepPoint->GetGlobalTime());
+  hit->SetTime(timeDrift);
   hit->SetPDGID(pdgID);
   
   fHitsCollection->insert(hit);
@@ -104,4 +111,10 @@ G4int SuperLayerSD::GetLayerID(G4int copyNo) const
   return copyNo / kNofCells + 1;
 }
 
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+G4double SuperLayerSD::GetTimeWithDrift(G4double time, G4ThreeVector distance) const
+{ 
+  return time + abs(distance.x()) / kDriftVelocity; //This is in the correct units  (ns)
+}
 }

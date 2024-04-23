@@ -49,6 +49,7 @@ set(DTSim_SCRIPTS
   init_vis.mac
   run1.mac
   run2.mac
+  runShowers.mac
   vis.mac
   plotter.mac
   tsg_offscreen.mac

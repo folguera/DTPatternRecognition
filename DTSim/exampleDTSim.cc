@@ -57,6 +57,8 @@ int main(int argc,char** argv)
   auto runManager =
     G4RunManagerFactory::CreateRunManager(G4RunManagerType::Default);
 
+  runManager->SetNumberOfThreads(4);
+  
   // Mandatory user initialization classes
   runManager->SetUserInitialization(new DTSim::DetectorConstruction);
 
